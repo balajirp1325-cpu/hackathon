@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodRescue - Save Food, Feed People</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Landing Page -->
+  <div id="landing-page">
+    <!-- Navigation -->
+    <nav class="landing-nav">
+      <div class="landing-nav-container">
+        <a href="#" class="navbar-brand">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+          FoodRescue
+        </a>
+        <div class="navbar-nav">
+          <a href="#features" class="navbar-link">Features</a>
+          <a href="#how-it-works" class="navbar-link">How It Works</a>
+          <a href="#impact" class="navbar-link">Impact</a>
+        </div>
+        <div class="navbar-actions">
+          <button class="btn btn-ghost" onclick="showAuth('login')">Log In</button>
+          <button class="btn btn-primary" onclick="showAuth('signup')">Get Started</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="landing-hero">
+      <div class="landing-hero-content">
+        <h1>Rescue Food. Feed Communities. Reduce Waste.</h1>
+        <p>Connect surplus food from restaurants, events, and individuals with NGOs who need it most. Together, we can end hunger and food waste.</p>
+        <div class="landing-hero-buttons">
+          <button class="btn btn-primary btn-lg" onclick="showAuth('signup')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <line x1="19" y1="8" x2="19" y2="14"/>
+              <line x1="22" y1="11" x2="16" y2="11"/>
+            </svg>
+            Join as Donor
+          </button>
+          <button class="btn btn-secondary btn-lg" onclick="showAuth('signup')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Join as NGO
+          </button>
+          <button class="btn btn-outline btn-lg" onclick="showAuth('signup')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="10 8 16 12 10 16 10 8"/>
+            </svg>
+            Become a Volunteer
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact Stats -->
+    <section class="landing-features" id="impact" style="background: var(--primary-light);">
+      <div class="impact-counter" style="max-width: 800px; margin: 0 auto;">
+        <h3 class="impact-counter-title" style="text-align: center; font-size: 1.25rem;">Our Collective Impact</h3>
+        <div class="impact-stats">
+          <div>
+            <div class="impact-stat-value" id="meals-counter">125,430</div>
+            <div class="impact-stat-label">Meals Rescued</div>
+          </div>
+          <div>
+            <div class="impact-stat-value" id="waste-counter">52.3 tons</div>
+            <div class="impact-stat-label">Food Waste Prevented</div>
+          </div>
+          <div>
+            <div class="impact-stat-value" id="co2-counter">78.4 tons</div>
+            <div class="impact-stat-label">CO₂ Emissions Saved</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="landing-features" id="features">
+      <h2 class="landing-section-title">Powerful Features for Everyone</h2>
+      <p class="landing-section-subtitle">Smart technology to make food rescue efficient and impactful</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon primary">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">Smart Location Matching</h4>
+          <p class="feature-desc">AI-powered matching connects donors with nearby NGOs for fastest food rescue.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon secondary">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">Expiry Tracking</h4>
+          <p class="feature-desc">Real-time countdown timers ensure food is rescued before it expires.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon warning">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">AI Quantity Estimation</h4>
+          <p class="feature-desc">Upload a photo and AI estimates how many servings are available.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon primary">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">Route Optimization</h4>
+          <p class="feature-desc">Smart routing for volunteers to handle multiple pickups efficiently.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon secondary">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">Real-time Notifications</h4>
+          <p class="feature-desc">Instant alerts for new food availability, pickup assignments, and deliveries.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon warning">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <h4 class="feature-title">Trust & Ratings</h4>
+          <p class="feature-desc">Community-driven ratings ensure quality and reliability for all parties.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="landing-how-it-works" id="how-it-works">
+      <h2 class="landing-section-title">How It Works</h2>
+      <p class="landing-section-subtitle">Simple steps to rescue food and make a difference</p>
+      <div class="how-it-works-grid">
+        <div class="how-it-works-step">
+          <div class="step-number">1</div>
+          <h4 class="step-title">List Surplus Food</h4>
+          <p class="step-desc">Donors upload food details with photos, quantity, and pickup location.</p>
+        </div>
+        <div class="how-it-works-step">
+          <div class="step-number">2</div>
+          <h4 class="step-title">Smart Matching</h4>
+          <p class="step-desc">Our AI matches food with nearby NGOs based on distance and need.</p>
+        </div>
+        <div class="how-it-works-step">
+          <div class="step-number">3</div>
+          <h4 class="step-title">Accept & Coordinate</h4>
+          <p class="step-desc">NGOs accept requests and volunteers are assigned for pickup.</p>
+        </div>
+        <div class="how-it-works-step">
+          <div class="step-number">4</div>
+          <h4 class="step-title">Deliver & Impact</h4>
+          <p class="step-desc">Food is delivered, tracked, and everyone's impact is recorded.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="landing-cta">
+      <h2>Ready to Make a Difference?</h2>
+      <p>Join thousands of donors, NGOs, and volunteers fighting food waste together.</p>
+      <button class="btn btn-lg" style="background: white; color: var(--primary);" onclick="showAuth('signup')">
+        Get Started Free
+      </button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+      <p>© 2024 FoodRescue. Made with ❤️ for a hunger-free world.</p>
+    </footer>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal" style="max-width: 450px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="auth-modal-title">Welcome Back</h3>
+        <button class="modal-close" onclick="hideAuth()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Login Form -->
+        <div id="login-form">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="Enter your email" id="login-email">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" placeholder="Enter your password" id="login-password">
+          </div>
+          <div class="flex justify-between items-center mb-4">
+            <label class="form-checkbox">
+              <input type="checkbox">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="text-sm">Forgot password?</a>
+          </div>
+          <button class="btn btn-primary w-full" onclick="handleLogin()">Log In</button>
+          <p class="text-center mt-4 text-sm text-gray-500">
+            Don't have an account? <a href="#" onclick="showAuth('signup')">Sign up</a>
+          </p>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form" class="hidden">
+          <p class="text-sm text-gray-600 mb-4">Select your role to get started</p>
+          <div class="role-selector" id="role-selector">
+            <div class="role-option" data-role="donor" onclick="selectRole('donor')">
+              <div class="role-option-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+              <div class="role-option-label">Donor</div>
+            </div>
+            <div class="role-option" data-role="ngo" onclick="selectRole('ngo')">
+              <div class="role-option-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <div class="role-option-label">NGO</div>
+            </div>
+            <div class="role-option" data-role="volunteer" onclick="selectRole('volunteer')">
+              <div class="role-option-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="1" y="3" width="15" height="13"/>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                  <circle cx="5.5" cy="18.5" r="2.5"/>
+                  <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+              </div>
+              <div class="role-option-label">Volunteer</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label required">Full Name</label>
+            <input type="text" class="form-input" placeholder="Enter your full name" id="signup-name">
+          </div>
+          <div class="form-group" id="org-name-group" style="display: none;">
+            <label class="form-label required">Organization Name</label>
+            <input type="text" class="form-input" placeholder="Enter organization name" id="signup-org">
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Email</label>
+            <input type="email" class="form-input" placeholder="Enter your email" id="signup-email">
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Phone Number</label>
+            <input type="tel" class="form-input" placeholder="Enter your phone number" id="signup-phone">
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Password</label>
+            <input type="password" class="form-input" placeholder="Create a password" id="signup-password">
+          </div>
+          <div class="form-group mb-4">
+            <label class="form-checkbox">
+              <input type="checkbox" id="signup-terms">
+              <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+            </label>
+          </div>
+          <button class="btn btn-primary w-full" onclick="handleSignup()">Create Account</button>
+          <p class="text-center mt-4 text-sm text-gray-500">
+            Already have an account? <a href="#" onclick="showAuth('login')">Log in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

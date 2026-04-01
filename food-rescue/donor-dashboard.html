@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donor Dashboard - FoodRescue</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="flex items-center gap-4">
+        <button class="btn btn-icon btn-ghost md-hidden" id="menu-toggle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <a href="#" class="navbar-brand">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+          FoodRescue
+        </a>
+      </div>
+
+      <div class="navbar-actions">
+        <button class="btn btn-icon btn-ghost notification-btn" onclick="toggleNotifications()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notification-badge">3</span>
+        </button>
+
+        <div class="dropdown" id="user-dropdown">
+          <button class="flex items-center gap-2 cursor-pointer" onclick="toggleDropdown('user-dropdown')">
+            <div class="avatar">
+              <span>JD</span>
+            </div>
+            <span class="text-sm font-medium hidden md-block">John's Restaurant</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              Profile
+            </div>
+            <div class="dropdown-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Settings
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" onclick="logout()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Logout
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Main Menu</div>
+      <a href="#" class="sidebar-link active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+      <a href="#" class="sidebar-link" onclick="showSection('donate')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Donate Food
+      </a>
+      <a href="#" class="sidebar-link" onclick="showSection('listings')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        My Listings
+      </a>
+      <a href="#" class="sidebar-link" onclick="showSection('history')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        History
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Analytics</div>
+      <a href="#" class="sidebar-link" onclick="showSection('impact')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="20" x2="12" y2="10"/>
+          <line x1="18" y1="20" x2="18" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="16"/>
+        </svg>
+        Impact Report
+      </a>
+      <a href="#" class="sidebar-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        My Rating
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="main-content">
+    <!-- Dashboard Section -->
+    <div id="section-dashboard">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Welcome back, John! 👋</h1>
+        <p class="dashboard-subtitle">Here's what's happening with your food donations today.</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon primary">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-card-value">247</div>
+          <div class="stat-card-label">Total Donations</div>
+          <div class="stat-card-change positive">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+              <polyline points="17 6 23 6 23 12"/>
+            </svg>
+            +12% this month
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon success">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-card-value">1,842</div>
+          <div class="stat-card-label">Meals Provided</div>
+          <div class="stat-card-change positive">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+              <polyline points="17 6 23 6 23 12"/>
+            </svg>
+            +8% this month
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon warning">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-card-value">3</div>
+          <div class="stat-card-label">Active Listings</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon secondary">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-card-value">4.9</div>
+          <div class="stat-card-label">Donor Rating</div>
+          <div class="rating readonly" style="margin-top: 0.5rem;">
+            <svg class="rating-star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg class="rating-star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg class="rating-star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg class="rating-star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg class="rating-star filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Impact Counter -->
+      <div class="impact-counter mb-6">
+        <h3 class="impact-counter-title">🌍 Your Environmental Impact</h3>
+        <div class="impact-stats">
+          <div>
+            <div class="impact-stat-value">1,842</div>
+            <div class="impact-stat-label">Meals Saved</div>
+          </div>
+          <div>
+            <div class="impact-stat-value">736 kg</div>
+            <div class="impact-stat-label">Food Waste Reduced</div>
+          </div>
+          <div>
+            <div class="impact-stat-value">1.1 tons</div>
+            <div class="impact-stat-label">CO₂ Saved</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions & Active Listings -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Quick Donate -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="font-semibold">Quick Donate</h3>
+          </div>
+          <div class="card-body">
+            <p class="text-gray-600 text-sm mb-4">Have surplus food? List it quickly and help those in need.</p>
+            <button class="btn btn-primary w-full" onclick="showSection('donate')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add New Donation
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Listings -->
+        <div class="card">
+          <div class="card-header flex justify-between items-center">
+            <h3 class="font-semibold">Active Listings</h3>
+            <span class="badge badge-primary">3 Active</span>
+          </div>
+          <div class="card-body" style="padding: 0;">
+            <div class="food-card-content" style="border-bottom: 1px solid var(--gray-100);">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="food-card-title">Biryani (20 portions)</h4>
+                  <p class="text-sm text-gray-500">Listed 30 mins ago</p>
+                </div>
+                <div class="expiry-timer warning">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  2h 30m
+                </div>
+              </div>
+              <div class="flex gap-2 mt-3">
+                <span class="badge badge-success">Accepted by Hope NGO</span>
+              </div>
+            </div>
+            <div class="food-card-content" style="border-bottom: 1px solid var(--gray-100);">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="food-card-title">Assorted Sandwiches (15)</h4>
+                  <p class="text-sm text-gray-500">Listed 1 hour ago</p>
+                </div>
+                <div class="expiry-timer">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  4h 15m
+                </div>
+              </div>
+              <div class="flex gap-2 mt-3">
+                <span class="badge badge-warning">Pending Pickup</span>
+              </div>
+            </div>
+            <div class="food-card-content">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h4 class="food-card-title">Fresh Fruits & Vegetables</h4>
+                  <p class="text-sm text-gray-500">Listed 2 hours ago</p>
+                </div>
+                <div class="expiry-timer">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  5h 45m
+                </div>
+              </div>
+              <div class="flex gap-2 mt-3">
+                <span class="badge badge-gray">Awaiting Match</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Donate Food Section -->
+    <div id="section-donate" class="hidden">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Donate Food</h1>
+        <p class="dashboard-subtitle">Fill in the details about your surplus food donation.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Main Form -->
+        <div class="md:col-span-2">
+          <div class="card">
+            <div class="card-body">
+              <form id="donate-form">
+                <!-- Food Photo Upload -->
+                <div class="form-group">
+                  <label class="form-label required">Food Photo</label>
+                  <div class="upload-zone" id="upload-zone" onclick="document.getElementById('food-image').click()">
+                    <input type="file" id="food-image" accept="image/*" hidden multiple onchange="handleImageUpload(this)">
+                    <svg class="upload-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <p class="upload-zone-text">Click to upload or drag and drop</p>
+                    <p class="upload-zone-hint">PNG, JPG up to 10MB</p>
+                  </div>
+                  <div class="upload-preview" id="upload-preview"></div>
+                </div>
+
+                <!-- AI Estimation Banner -->
+                <div class="card mb-4" style="background: var(--primary-light); border: 1px solid var(--primary);">
+                  <div class="card-body flex items-center gap-3" style="padding: 0.75rem 1rem;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                      <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                      <path d="M20 12a8 8 0 1 1-16 0"/>
+                      <line x1="12" y1="6" x2="12" y2="12"/>
+                    </svg>
+                    <div>
+                      <p class="font-medium text-primary text-sm">AI Quantity Estimation</p>
+                      <p class="text-xs text-gray-600">Upload a photo and we'll estimate the servings automatically!</p>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary ml-auto" onclick="estimateQuantity()">Estimate</button>
+                  </div>
+                </div>
+
+                <!-- Food Details -->
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div class="form-group">
+                    <label class="form-label required">Food Name</label>
+                    <input type="text" class="form-input" placeholder="e.g., Vegetable Biryani" id="food-name">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label required">Food Type</label>
+                    <select class="form-select" id="food-type">
+                      <option value="">Select type</option>
+                      <option value="cooked">Cooked Food</option>
+                      <option value="raw">Raw Ingredients</option>
+                      <option value="packaged">Packaged Food</option>
+                      <option value="fruits">Fruits & Vegetables</option>
+                      <option value="bakery">Bakery Items</option>
+                      <option value="beverages">Beverages</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div class="form-group">
+                    <label class="form-label required">Quantity</label>
+                    <input type="text" class="form-input" placeholder="e.g., 20 portions or 5 kg" id="food-quantity">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label required">Estimated Servings</label>
+                    <input type="number" class="form-input" placeholder="Number of people it can feed" id="food-servings">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label required">Expiry Time</label>
+                  <div class="grid grid-cols-2 gap-4">
+                    <input type="date" class="form-input" id="expiry-date">
+                    <input type="time" class="form-input" id="expiry-time">
+                  </div>
+                  <p class="form-hint">When does this food need to be picked up by?</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-textarea" placeholder="Any additional details about the food..." id="food-description"></textarea>
+                </div>
+
+                <!-- Pickup Location -->
+                <div class="form-group">
+                  <label class="form-label required">Pickup Location</label>
+                  <div class="flex gap-2 mb-2">
+                    <input type="text" class="form-input" placeholder="Enter address or use GPS" id="pickup-address" style="flex: 1;">
+                    <button type="button" class="btn btn-outline" onclick="detectLocation()">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                      GPS
+                    </button>
+                  </div>
+                  <div class="map-container" style="height: 200px;">
+                    <div class="map-placeholder">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      <p class="text-sm mt-2">Map will appear here</p>
+                      <p class="text-xs text-gray-400">Click GPS or enter address to set location</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contact Details -->
+                <div class="grid md:grid-cols-2 gap-4">
+                  <div class="form-group">
+                    <label class="form-label required">Contact Person</label>
+                    <input type="text" class="form-input" placeholder="Name" id="contact-name">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label required">Contact Phone</label>
+                    <input type="tel" class="form-input" placeholder="Phone number" id="contact-phone">
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar - Safety Checklist -->
+        <div>
+          <div class="card mb-4">
+            <div class="card-header">
+              <h3 class="font-semibold flex items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Food Safety Checklist
+              </h3>
+            </div>
+            <div class="card-body">
+              <p class="text-sm text-gray-600 mb-4">Please confirm the following before donating:</p>
+              <div class="checklist" id="safety-checklist">
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                  <div class="checklist-checkbox">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <div class="checklist-content">
+                    <div class="checklist-title">Food is Fresh</div>
+                    <div class="checklist-desc">Prepared within safe time limits</div>
+                  </div>
+                </div>
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                  <div class="checklist-checkbox">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <div class="checklist-content">
+                    <div class="checklist-title">Properly Packed</div>
+                    <div class="checklist-desc">In clean, sealed containers</div>
+                  </div>
+                </div>
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                  <div class="checklist-checkbox">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <div class="checklist-content">
+                    <div class="checklist-title">Not Contaminated</div>
+                    <div class="checklist-desc">No signs of spoilage or contamination</div>
+                  </div>
+                </div>
+                <div class="checklist-item" onclick="toggleChecklist(this)">
+                  <div class="checklist-checkbox">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <div class="checklist-content">
+                    <div class="checklist-title">Stored Correctly</div>
+                    <div class="checklist-desc">At appropriate temperature</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg w-full" onclick="submitDonation()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Submit Donation
+          </button>
+          <p class="text-xs text-gray-500 text-center mt-2">Your donation will be visible to nearby NGOs immediately</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Listings Section -->
+    <div id="section-listings" class="hidden">
+      <div class="dashboard-header flex justify-between items-center">
+        <div>
+          <h1 class="dashboard-title">My Listings</h1>
+          <p class="dashboard-subtitle">Manage all your food donation listings.</p>
+        </div>
+        <button class="btn btn-primary" onclick="showSection('donate')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          New Donation
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs mb-4">
+        <button class="tab active" onclick="filterListings('all', this)">All (8)</button>
+        <button class="tab" onclick="filterListings('active', this)">Active (3)</button>
+        <button class="tab" onclick="filterListings('pending', this)">Pending (2)</button>
+        <button class="tab" onclick="filterListings('completed', this)">Completed (3)</button>
+      </div>
+
+      <!-- Listings Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="listings-grid">
+        <!-- Sample Listings -->
+        <div class="food-card" data-status="active">
+          <div class="food-card-image">
+            <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400" alt="Biryani">
+            <div class="food-card-badges">
+              <span class="badge badge-primary">Cooked</span>
+            </div>
+            <div class="food-card-timer">
+              <div class="expiry-timer warning">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                2h 30m
+              </div>
+            </div>
+          </div>
+          <div class="food-card-content">
+            <h4 class="food-card-title">Biryani (20 portions)</h4>
+            <div class="food-card-meta">
+              <span class="food-card-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Listed 30 mins ago
+              </span>
+              <span class="food-card-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                15 views
+              </span>
+            </div>
+            <div class="food-card-location">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>123 Main St, Downtown</span>
+            </div>
+            <div class="food-card-donor">
+              <div class="food-card-donor-info">
+                <div class="food-card-donor-name">Accepted by Hope NGO</div>
+                <div class="food-card-donor-rating">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  4.8 (24 reviews)
+                </div>
+              </div>
+            </div>
+            <div class="food-card-actions">
+              <button class="btn btn-sm btn-outline">View Details</button>
+              <button class="btn btn-sm btn-primary">Track Delivery</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="food-card" data-status="pending">
+          <div class="food-card-image">
+            <img src="https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400" alt="Sandwiches">
+            <div class="food-card-badges">
+              <span class="badge badge-primary">Cooked</span>
+            </div>
+            <div class="food-card-timer">
+              <div class="expiry-timer">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                4h 15m
+              </div>
+            </div>
+          </div>
+          <div class="food-card-content">
+            <h4 class="food-card-title">Assorted Sandwiches (15)</h4>
+            <div class="food-card-meta">
+              <span class="food-card-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Listed 1 hour ago
+              </span>
+              <span class="food-card-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                8 views
+              </span>
+            </div>
+            <div class="food-card-location">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>456 Oak Ave, Midtown</span>
+            </div>
+            <div class="food-card-donor">
+              <div class="food-card-donor-info">
+                <div class="food-card-donor-name">Pending NGO Response</div>
+                <div class="food-card-donor-rating">
+                  <span class="badge badge-warning">2 interested</span>
+                </div>
+              </div>
+            </div>
+            <div class="food-card-actions">
+              <button class="btn btn-sm btn-outline">Edit Listing</button>
+              <button class="btn btn-sm btn-danger">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="food-card" data-status="active">
+          <div class="food-card-image">
+            <img src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=400" alt="Fruits">
+            <div class="food-card-badges">
+              <span class="badge badge-secondary">Fresh</span>
+            </div>
+            <div class="food-card-timer">
+              <div class="expiry-timer">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                5h 45m
+              </div>
+            </div>
+          </div>
+          <div class="food-card-content">
+            <h4 class="food-card-title">Fresh Fruits & Vegetables</h4>
+            <div class="food-card-meta">
+              <span class="food-card-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Listed 2 hours ago
+              </span>
+              <span class="food-card-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                12 views
+              </span>
+            </div>
+            <div class="food-card-location">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <span>789 Pine St, Uptown</span>
+            </div>
+            <div class="food-card-donor">
+              <div class="food-card-donor-info">
+                <div class="food-card-donor-name">Awaiting Volunteer Assignment</div>
+                <div class="food-card-donor-rating">
+                  <span class="badge badge-gray">Matched</span>
+                </div>
+              </div>
+            </div>
+            <div class="food-card-actions">
+              <button class="btn btn-sm btn-outline">View Details</button>
+              <button class="btn btn-sm btn-secondary">Contact NGO</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Section -->
+    <div id="section-history" class="hidden">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Donation History</h1>
+        <p class="dashboard-subtitle">Track all your past food donations and their impact.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="order-feed">
+            <div class="order-feed-item">
+              <div class="order-feed-image">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=100" alt="Pizza">
+              </div>
+              <div class="order-feed-content">
+                <div class="order-feed-source">COMPLETED</div>
+                <h4 class="order-feed-title">Margherita Pizza (12 slices)</h4>
+                <p class="order-feed-meta">Delivered to City Food Bank • 3 days ago • 12 meals served</p>
+              </div>
+              <div class="order-feed-actions">
+                <button class="btn btn-sm btn-outline">View Details</button>
+              </div>
+            </div>
+
+            <div class="order-feed-item">
+              <div class="order-feed-image">
+                <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100" alt="Salad">
+              </div>
+              <div class="order-feed-content">
+                <div class="order-feed-source">COMPLETED</div>
+                <h4 class="order-feed-title">Garden Salad Mix (25 portions)</h4>
+                <p class="order-feed-meta">Delivered to Hope Center • 1 week ago • 25 meals served</p>
+              </div>
+              <div class="order-feed-actions">
+                <button class="btn btn-sm btn-outline">View Details</button>
+              </div>
+            </div>
+
+            <div class="order-feed-item">
+              <div class="order-feed-image">
+                <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=100" alt="Bread">
+              </div>
+              <div class="order-feed-content">
+                <div class="order-feed-source">COMPLETED</div>
+                <h4 class="order-feed-title">Fresh Bakery Bread (30 loaves)</h4>
+                <p class="order-feed-meta">Delivered to Community Kitchen • 2 weeks ago • 150 meals served</p>
+              </div>
+              <div class="order-feed-actions">
+                <button class="btn btn-sm btn-outline">View Details</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Impact Report Section -->
+    <div id="section-impact" class="hidden">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Impact Report</h1>
+        <p class="dashboard-subtitle">See the real difference your donations are making.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="font-semibold">Monthly Impact</h3>
+          </div>
+          <div class="card-body">
+            <div class="impact-counter" style="background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%);">
+              <h3 class="impact-counter-title">This Month</h3>
+              <div class="impact-stats">
+                <div>
+                  <div class="impact-stat-value">247</div>
+                  <div class="impact-stat-label">Meals Donated</div>
+                </div>
+                <div>
+                  <div class="impact-stat-value">89 kg</div>
+                  <div class="impact-stat-label">Waste Prevented</div>
+                </div>
+                <div>
+                  <div class="impact-stat-value">134 kg</div>
+                  <div class="impact-stat-label">CO₂ Saved</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="font-semibold">Yearly Impact</h3>
+          </div>
+          <div class="card-body">
+            <div class="impact-counter" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--warning) 100%);">
+              <h3 class="impact-counter-title">This Year</h3>
+              <div class="impact-stats">
+                <div>
+                  <div class="impact-stat-value">2,847</div>
+                  <div class="impact-stat-label">Meals Donated</div>
+                </div>
+                <div>
+                  <div class="impact-stat-value">1.2 tons</div>
+                  <div class="impact-stat-label">Waste Prevented</div>
+                </div>
+                <div>
+                  <div class="impact-stat-value">1.8 tons</div>
+                  <div class="impact-stat-label">CO₂ Saved</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-6">
+        <div class="card-header">
+          <h3 class="font-semibold">Impact Timeline</h3>
+        </div>
+        <div class="card-body">
+          <div class="text-center py-8">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--gray-300)" stroke-width="1">
+              <line x1="12" y1="20" x2="12" y2="10"/>
+              <line x1="18" y1="20" x2="18" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="16"/>
+            </svg>
+            <p class="text-gray-500 mt-4">Impact chart would be displayed here</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Notification Panel -->
+  <div id="notification-panel" class="notification-panel">
+    <div class="notification-panel-header">
+      <h3 class="notification-panel-title">Notifications</h3>
+      <button class="btn btn-ghost btn-sm" onclick="toggleNotifications()">✕</button>
+    </div>
+    <div class="notification-list">
+      <div class="notification-item unread">
+        <div class="notification-icon success">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="notification-content">
+          <h4 class="notification-title">Donation Accepted</h4>
+          <p class="notification-text">Hope NGO has accepted your biryani donation</p>
+          <span class="notification-time">2 mins ago</span>
+        </div>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-icon info">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+        </div>
+        <div class="notification-content">
+          <h4 class="notification-title">Volunteer Assigned</h4>
+          <p class="notification-text">Sarah will pick up your sandwiches at 3 PM</p>
+          <span class="notification-time">1 hour ago</span>
+        </div>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-icon warning">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div class="notification-content">
+          <h4 class="notification-title">Expiry Reminder</h4>
+          <p class="notification-text">Your vegetable donation expires in 2 hours</p>
+          <span class="notification-time">3 hours ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="js/donor.js"></script>
+</body>
+</html>

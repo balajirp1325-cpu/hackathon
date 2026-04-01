@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Dashboard - FoodRescue</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+</head>
+<body class="bg-gray-50">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <button id="menu-toggle" class="menu-toggle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="navbar-brand">
+        <span class="text-xl font-bold text-primary">🍽️ FoodRescue</span>
+      </div>
+    </div>
+
+    <div class="navbar-right">
+      <div class="navbar-notifications">
+        <button onclick="toggleNotifications()" class="notification-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notification-badge">2</span>
+        </button>
+      </div>
+
+      <div class="navbar-profile dropdown">
+        <button onclick="toggleDropdown('profile-dropdown')" class="dropdown-toggle">
+          <div class="avatar">
+            <span>V</span>
+          </div>
+          <span class="text-sm">Volunteer Name</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div id="profile-dropdown" class="dropdown-menu">
+          <a href="#" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Profile
+          </a>
+          <a href="#" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            Settings
+          </a>
+          <hr class="dropdown-divider">
+          <a href="#" onclick="logout()" class="dropdown-item text-red-600">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#" onclick="showSection('overview')" class="sidebar-link active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Overview
+      </a>
+      <a href="#" onclick="showSection('tasks')" class="sidebar-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        My Tasks
+      </a>
+      <a href="#" onclick="showSection('deliveries')" class="sidebar-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="3" width="15" height="13"/>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+          <circle cx="5.5" cy="18.5" r="2.5"/>
+          <circle cx="18.5" cy="18.5" r="2.5"/>
+        </svg>
+        Deliveries
+      </a>
+      <a href="#" onclick="showSection('history')" class="sidebar-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        History
+      </a>
+      <a href="#" onclick="showSection('impact')" class="sidebar-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        My Impact
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Overview Section -->
+    <section id="section-overview" class="dashboard-section">
+      <div class="section-header">
+        <h1 class="section-title">Volunteer Dashboard</h1>
+        <p class="section-subtitle">Track your deliveries and make a difference in your community</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Deliveries Today</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Active Tasks</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">4.9</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">342</div>
+            <div class="stat-label">Meals Delivered</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Tasks -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3 class="card-title">Current Tasks</h3>
+          <button class="btn btn-primary btn-sm">View All Tasks</button>
+        </div>
+        <div class="tasks-list">
+          <div class="task-item urgent">
+            <div class="task-header">
+              <div class="task-id">#TASK-001</div>
+              <div class="task-priority urgent">Urgent</div>
+            </div>
+            <div class="task-content">
+              <h4 class="task-title">Pickup from Riverside Bakery</h4>
+              <p class="task-description">Collect 25 servings of fresh bread and pastries. Food expires in 2 hours.</p>
+              <div class="task-details">
+                <div class="detail-item">
+                  <span class="label">Pickup:</span>
+                  <span class="value">123 Main St, Downtown</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Delivery:</span>
+                  <span class="value">Community Center, 456 Oak Ave</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Time:</span>
+                  <span class="value">ASAP</span>
+                </div>
+              </div>
+            </div>
+            <div class="task-actions">
+              <button onclick="startTask(1)" class="btn btn-primary">Start Task</button>
+              <button onclick="viewTaskDetails(1)" class="btn btn-secondary">View Details</button>
+            </div>
+          </div>
+
+          <div class="task-item normal">
+            <div class="task-header">
+              <div class="task-id">#TASK-002</div>
+              <div class="task-priority normal">Normal</div>
+            </div>
+            <div class="task-content">
+              <h4 class="task-title">Pickup from Green Valley Restaurant</h4>
+              <p class="task-description">Collect vegetable stir fry ingredients for 40 servings.</p>
+              <div class="task-details">
+                <div class="detail-item">
+                  <span class="label">Pickup:</span>
+                  <span class="value">789 Pine St, Midtown</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Delivery:</span>
+                  <span class="value">Homeless Shelter, 321 Elm St</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Time:</span>
+                  <span class="value">Within 2 hours</span>
+                </div>
+              </div>
+            </div>
+            <div class="task-actions">
+              <button onclick="startTask(2)" class="btn btn-primary">Start Task</button>
+              <button onclick="viewTaskDetails(2)" class="btn btn-secondary">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3 class="card-title">Quick Actions</h3>
+        </div>
+        <div class="quick-actions">
+          <button onclick="showSection('tasks')" class="quick-action-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span>View All Tasks</span>
+          </button>
+
+          <button onclick="updateAvailability()" class="quick-action-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span>Update Availability</span>
+          </button>
+
+          <button onclick="contactSupport()" class="quick-action-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>Contact Support</span>
+          </button>
+
+          <button onclick="viewMap()" class="quick-action-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>View Map</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tasks Section -->
+    <section id="section-tasks" class="dashboard-section hidden">
+      <div class="section-header">
+        <h1 class="section-title">My Tasks</h1>
+        <p class="section-subtitle">Manage your delivery assignments</p>
+      </div>
+
+      <!-- Task Filters -->
+      <div class="filters-bar">
+        <div class="filter-tabs">
+          <button onclick="filterTasks('all', this)" class="tab active">All Tasks</button>
+          <button onclick="filterTasks('pending', this)" class="tab">Pending</button>
+          <button onclick="filterTasks('in-progress', this)" class="tab">In Progress</button>
+          <button onclick="filterTasks('completed', this)" class="tab">Completed</button>
+        </div>
+        <div class="filter-search">
+          <input type="text" placeholder="Search tasks..." class="form-input">
+          <button class="btn btn-primary">Search</button>
+        </div>
+      </div>
+
+      <!-- Tasks List -->
+      <div id="tasks-list" class="tasks-list">
+        <!-- Task items will be populated here -->
+      </div>
+    </section>
+
+    <!-- Deliveries Section -->
+    <section id="section-deliveries" class="dashboard-section hidden">
+      <div class="section-header">
+        <h1 class="section-title">Active Deliveries</h1>
+        <p class="section-subtitle">Track your current delivery routes</p>
+      </div>
+
+      <div class="deliveries-list">
+        <div class="delivery-card active">
+          <div class="delivery-header">
+            <div class="delivery-id">#DEL-001</div>
+            <div class="delivery-status status-in-transit">In Transit</div>
+          </div>
+          <div class="delivery-content">
+            <div class="delivery-route">
+              <div class="route-point pickup completed">
+                <div class="route-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                </div>
+                <div class="route-info">
+                  <div class="route-label">Pickup</div>
+                  <div class="route-address">Riverside Bakery, 123 Main St</div>
+                  <div class="route-time">Completed at 2:30 PM</div>
+                </div>
+              </div>
+              <div class="route-arrow active">→</div>
+              <div class="route-point delivery active">
+                <div class="route-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                  </svg>
+                </div>
+                <div class="route-info">
+                  <div class="route-label">Delivery</div>
+                  <div class="route-address">Community Center, 456 Oak Ave</div>
+                  <div class="route-time">ETA: 15 minutes</div>
+                </div>
+              </div>
+            </div>
+            <div class="delivery-details">
+              <div class="detail-item">
+                <span class="label">NGO:</span>
+                <span class="value">City Food Bank</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Items:</span>
+                <span class="value">Fresh Bread & Pastries (25 servings)</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Contact:</span>
+                <span class="value">(555) 123-4567</span>
+              </div>
+            </div>
+          </div>
+          <div class="delivery-actions">
+            <button onclick="callRecipient()" class="btn btn-secondary">Call Recipient</button>
+            <button onclick="markDelivered(1)" class="btn btn-success">Mark Delivered</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- History Section -->
+    <section id="section-history" class="dashboard-section hidden">
+      <div class="section-header">
+        <h1 class="section-title">Delivery History</h1>
+        <p class="section-subtitle">View your completed deliveries</p>
+      </div>
+
+      <div class="history-list">
+        <div class="history-item">
+          <div class="history-header">
+            <div class="history-id">#DEL-005</div>
+            <div class="history-date">Yesterday, 3:45 PM</div>
+          </div>
+          <div class="history-content">
+            <div class="history-route">
+              <span class="route-text">Riverside Bakery → Community Center</span>
+            </div>
+            <div class="history-details">
+              <div class="detail-item">
+                <span class="label">Items:</span>
+                <span class="value">Fresh Bread & Pastries (25 servings)</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">NGO:</span>
+                <span class="value">City Food Bank</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Rating:</span>
+                <span class="value">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-text">(5.0)</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-header">
+            <div class="history-id">#DEL-004</div>
+            <div class="history-date">2 days ago, 1:20 PM</div>
+          </div>
+          <div class="history-content">
+            <div class="history-route">
+              <span class="route-text">Green Valley Restaurant → Homeless Shelter</span>
+            </div>
+            <div class="history-details">
+              <div class="detail-item">
+                <span class="label">Items:</span>
+                <span class="value">Vegetable Stir Fry (40 servings)</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">NGO:</span>
+                <span class="value">Hope Center</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Rating:</span>
+                <span class="value">
+                  <span class="stars">★★★★☆</span>
+                  <span class="rating-text">(4.5)</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section id="section-impact" class="dashboard-section hidden">
+      <div class="section-header">
+        <h1 class="section-title">My Impact</h1>
+        <p class="section-subtitle">See how your volunteering makes a difference</p>
+      </div>
+
+      <div class="impact-grid">
+        <div class="impact-card">
+          <div class="impact-header">
+            <h3 class="impact-title">Total Deliveries</h3>
+            <div class="impact-value">156</div>
+          </div>
+          <div class="impact-chart">
+            <div class="chart-bar" style="height: 80%"></div>
+            <div class="chart-bar" style="height: 65%"></div>
+            <div class="chart-bar" style="height: 90%"></div>
+            <div class="chart-bar" style="height: 75%"></div>
+            <div class="chart-bar" style="height: 85%"></div>
+            <div class="chart-bar" style="height: 95%"></div>
+            <div class="chart-bar" style="height: 70%"></div>
+          </div>
+          <div class="impact-footer">
+            <span class="impact-change positive">+12 this month</span>
+          </div>
+        </div>
+
+        <div class="impact-card">
+          <div class="impact-header">
+            <h3 class="impact-title">Meals Delivered</h3>
+            <div class="impact-value">3,420</div>
+          </div>
+          <div class="impact-chart">
+            <div class="chart-bar" style="height: 60%"></div>
+            <div class="chart-bar" style="height: 75%"></div>
+            <div class="chart-bar" style="height: 85%"></div>
+            <div class="chart-bar" style="height: 70%"></div>
+            <div class="chart-bar" style="height: 90%"></div>
+            <div class="chart-bar" style="height: 80%"></div>
+            <div class="chart-bar" style="height: 95%"></div>
+          </div>
+          <div class="impact-footer">
+            <span class="impact-change positive">+342 this month</span>
+          </div>
+        </div>
+
+        <div class="impact-card">
+          <div class="impact-header">
+            <h3 class="impact-title">Distance Traveled</h3>
+            <div class="impact-value">487 km</div>
+          </div>
+          <div class="impact-chart">
+            <div class="chart-bar" style="height: 70%"></div>
+            <div class="chart-bar" style="height: 80%"></div>
+            <div class="chart-bar" style="height: 65%"></div>
+            <div class="chart-bar" style="height: 85%"></div>
+            <div class="chart-bar" style="height: 75%"></div>
+            <div class="chart-bar" style="height: 90%"></div>
+            <div class="chart-bar" style="height: 60%"></div>
+          </div>
+          <div class="impact-footer">
+            <span class="impact-change positive">+48 km this month</span>
+          </div>
+        </div>
+
+        <div class="impact-card">
+          <div class="impact-header">
+            <h3 class="impact-title">Average Rating</h3>
+            <div class="impact-value">4.9</div>
+          </div>
+          <div class="impact-chart">
+            <div class="chart-bar" style="height: 85%"></div>
+            <div class="chart-bar" style="height: 75%"></div>
+            <div class="chart-bar" style="height: 90%"></div>
+            <div class="chart-bar" style="height: 80%"></div>
+            <div class="chart-bar" style="height: 95%"></div>
+            <div class="chart-bar" style="height: 70%"></div>
+            <div class="chart-bar" style="height: 85%"></div>
+          </div>
+          <div class="impact-footer">
+            <span class="impact-change positive">+0.1 this month</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Achievement Badges -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3 class="card-title">Achievements</h3>
+        </div>
+        <div class="achievements-grid">
+          <div class="achievement-badge earned">
+            <div class="badge-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            </div>
+            <div class="badge-info">
+              <div class="badge-title">First Delivery</div>
+              <div class="badge-description">Completed your first food delivery</div>
+            </div>
+          </div>
+
+          <div class="achievement-badge earned">
+            <div class="badge-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="badge-info">
+              <div class="badge-title">Team Player</div>
+              <div class="badge-description">Completed 50 deliveries</div>
+            </div>
+          </div>
+
+          <div class="achievement-badge earned">
+            <div class="badge-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <div class="badge-info">
+              <div class="badge-title">Impact Maker</div>
+              <div class="badge-description">Delivered 1000+ meals</div>
+            </div>
+          </div>
+
+          <div class="achievement-badge">
+            <div class="badge-icon locked">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="badge-info">
+              <div class="badge-title">Speed Demon</div>
+              <div class="badge-description">Complete 10 deliveries in one day</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Notification Panel -->
+  <div id="notification-panel" class="notification-panel">
+    <div class="notification-header">
+      <h3 class="notification-title">Notifications</h3>
+      <button onclick="toggleNotifications()" class="notification-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="notification-list">
+      <div class="notification-item unread">
+        <div class="notification-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </div>
+        <div class="notification-content">
+          <p class="notification-text">New delivery task assigned: Riverside Bakery pickup</p>
+          <span class="notification-time">5 min ago</span>
+        </div>
+      </div>
+
+      <div class="notification-item">
+        <div class="notification-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="notification-content">
+          <p class="notification-text">Reminder: Green Valley Restaurant pickup in 30 minutes</p>
+          <span class="notification-time">25 min ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/volunteer.js"></script>
+</body>
+</html>
