@@ -28,11 +28,26 @@ git push -u origin main
 3. Go to Settings → Database → Connection string
 4. Copy the connection string
 
-### Step 3: Deploy to Vercel
+### Step 3: Update Schema for PostgreSQL
+Before deploying, change the database provider in `prisma/schema.prisma`:
+```prisma
+datasource db {
+  provider = "postgresql"  // Change from "sqlite" to "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
+
+Then commit and push:
+```bash
+git add prisma/schema.prisma
+git commit -m "Update schema to use PostgreSQL for production"
+git push
+```
+
+### Step 4: Deploy to Vercel
 1. Go to [https://vercel.com/new](https://vercel.com/new)
 2. Import your GitHub repository
 3. Add Environment Variables:
-   - `DATABASE_PROVIDER` = `postgresql`
    - `DATABASE_URL` = (your PostgreSQL connection string)
    - `JWT_SECRET` = (generate a random secure string, e.g., `openssl rand -hex 32`)
    - `JWT_REFRESH_SECRET` = (another random secure string)
@@ -41,18 +56,24 @@ git push -u origin main
 
 4. Click "Deploy"
 
-### Step 4: Run Database Migrations
+### Step 5: Run Database Migrations
 After deployment:
 ```bash
-# In Vercel dashboard, go to your project
-# Click "Deployments" → Select latest deployment
-# Open the function URL in browser or use:
+# Use your PostgreSQL connection URL
 DATABASE_URL="your-postgresql-url" npx prisma migrate deploy
 ```
 
-Or use a Vercel Function to run migrations automatically. Contact support or see below.
+Or add a `.env.production` locally:
+```env
+DATABASE_URL=your-postgresql-connection-string
+```
 
-### Step 5: Test Deployment
+Then run:
+```bash
+npx prisma migrate deploy
+```
+
+### Step 6: Test Deployment
 ```bash
 curl https://your-vercel-domain.vercel.app/health
 ```
@@ -60,9 +81,9 @@ curl https://your-vercel-domain.vercel.app/health
 Expected response:
 ```json
 {
-  "status": "ok",
-  "timestamp": "2026-04-01T00:00:00Z",
-  "uptime": 123
+  "success": true,
+  "message": "FoodBridge API is running",
+  "timestamp": "2026-04-01T00:00:00Z"
 }
 ```
 
@@ -71,8 +92,7 @@ Expected response:
 ## Environment Variables Reference
 
 ```env
-# Database Configuration
-DATABASE_PROVIDER=postgresql        # Change from 'sqlite' to 'postgresql'
+# Database Configuration (PostgreSQL for production, SQLite for local dev)
 DATABASE_URL=postgresql://user:password@host/dbname
 
 # Security
@@ -100,12 +120,31 @@ GOOGLE_MAPS_API_KEY=your-maps-api-key
 ## Database Setup for Production
 
 ### Important: Schema Compatibility
-The current `prisma/schema.prisma` is configured to work with **both SQLite and PostgreSQL**.
+The current `prisma/schema.prisma` uses SQLite for **local development**.
 
 When deploying to Vercel with PostgreSQL:
-1. Set `DATABASE_PROVIDER=postgresql` in Vercel environment variables
-2. Run: `DATABASE_URL="your-db-url" npx prisma migrate deploy`
-3. This applies all pending migrations to PostgreSQL
+1. Change `prisma/schema.prisma` provider from `sqlite` to `postgresql`
+2. Commit and push to GitHub
+3. Deploy to Vercel (deployment will trigger automatically when you push)
+4. Set `DATABASE_URL` environment variable in Vercel dashboard
+5. Run: `DATABASE_URL="your-db-url" npx prisma migrate deploy`
+
+### Local Development Setup
+```bash
+# .env for local dev (uses SQLite)
+DATABASE_URL="file:./dev.db"
+```
+
+### Production Setup
+```bash
+# Change in prisma/schema.prisma before deploying:
+datasource db {
+  provider = "postgresql"  # Changed from "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+# Then set DATABASE_URL in Vercel environment variables to your PostgreSQL connection string
+```
 
 ### Generate Sample Data in Production
 ```bash
@@ -116,8 +155,19 @@ DATABASE_URL="your-db-url" node prisma/seed.js
 
 ## Troubleshooting
 
-### Issue: "DATABASE_PROVIDER not found"
-**Solution:** Add `DATABASE_PROVIDER=postgresql` to your Vercel environment variables
+### Issue: Build fails with "npm run build exited with 1"
+**Solution:** This usually means Prisma schema is invalid. Make sure:
+1. `prisma/schema.prisma` has a valid provider (either "sqlite" or "postgresql")
+2. Run locally: `npm run build` to test
+
+### Issue: Schema validation error about constructor
+**Solution:** Ensure schema syntax is correct:
+```prisma
+datasource db {
+  provider = "postgresql"  // or "sqlite" for local
+  url      = env("DATABASE_URL")
+}
+```
 
 ### Issue: "Connection refused" on first deploy
 **Solution:** Vercel might cache old builds. Do a full rebuild:
