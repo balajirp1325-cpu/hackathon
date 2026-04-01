@@ -71,8 +71,14 @@ function handleLogin() {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      // Store user data and token
-      localStorage.setItem('foodrescueuser', JSON.stringify(data.data.user));
+      // Store user data and token (add client-side flags)
+      const apiUser = data.data.user || {};
+      const storedUser = {
+        ...apiUser,
+        loggedIn: true,
+        organization: apiUser.organization || apiUser.name || ''
+      };
+      localStorage.setItem('foodrescueuser', JSON.stringify(storedUser));
       localStorage.setItem('foodrescuetoken', data.data.accessToken);
       
       showToast('Login successful!', 'success');
@@ -147,8 +153,14 @@ function handleSignup() {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      // Store user data and token
-      localStorage.setItem('foodrescueuser', JSON.stringify(data.data.user));
+      // Store user data and token (include organization if provided)
+      const apiUser = data.data.user || {};
+      const storedUser = {
+        ...apiUser,
+        loggedIn: true,
+        organization: apiUser.organization || org || apiUser.name || ''
+      };
+      localStorage.setItem('foodrescueuser', JSON.stringify(storedUser));
       localStorage.setItem('foodrescuetoken', data.data.accessToken);
       
       showToast('Account created successfully!', 'success');

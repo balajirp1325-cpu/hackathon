@@ -9,7 +9,8 @@ let uploadedImages = [];
 document.addEventListener('DOMContentLoaded', function() {
   // Check authentication
   const user = JSON.parse(localStorage.getItem('foodrescueuser') || '{}');
-  if (!user.loggedIn || user.role !== 'donor') {
+  const normalizedRole = (user.role || '').toString().toLowerCase();
+  if (!user.loggedIn || normalizedRole !== 'donor') {
     window.location.href = 'index.html';
     return;
   }
@@ -19,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initialize components
   initializeDashboard();
+  // Load donor's listings
+  loadMyListings();
 });
 
 // Update user info in navbar
@@ -284,29 +287,63 @@ function submitDonation() {
     return;
   }
 
-  // Simulate submission
+  // Submit to backend
   showToast('Submitting donation...', 'info');
 
-  setTimeout(() => {
-    showToast('Donation submitted successfully!', 'success');
+  const token = localStorage.getItem('foodrescuetoken');
+  const form = new FormData();
+  form.append('title', document.getElementById('food-name').value.trim());
+  form.append('description', document.getElementById('food-description')?.value || '');
+  form.append('quantity', parseInt(document.getElementById('food-servings').value || document.getElementById('food-quantity').value, 10));
+  form.append('unit', 'servings');
+  const ft = document.getElementById('food-type').value || '';
+  form.append('foodType', ft.toUpperCase() || 'VEG');
+  form.append('latitude', 0);
+  form.append('longitude', 0);
+  form.append('address', document.getElementById('pickup-address').value || '');
+  const expiryDate = document.getElementById('expiry-date').value;
+  const expiryTime = document.getElementById('expiry-time').value;
+  if (expiryDate && expiryTime) {
+    form.append('expiryTime', new Date(`${expiryDate}T${expiryTime}`).toISOString());
+  }
 
-    // Reset form
-    document.getElementById('donate-form').reset();
-    document.getElementById('upload-preview').innerHTML = '';
-    uploadedImages = [];
+  uploadedImages.forEach((f) => form.append('image', f, f.name));
 
-    // Reset checklist
-    document.querySelectorAll('.checklist-item').forEach(item => {
-      item.classList.remove('checked');
-      const checkbox = item.querySelector('.checklist-checkbox');
-      checkbox.style.background = 'transparent';
-      checkbox.style.borderColor = 'var(--gray-300)';
-      checkbox.querySelector('svg').style.color = 'transparent';
-    });
+  fetch('/api/food', {
+    method: 'POST',
+    headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+    body: form,
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showToast('Donation submitted successfully!', 'success');
 
-    // Switch to listings view
-    showSection('listings');
-  }, 2000);
+      // Reset form
+      document.getElementById('donate-form').reset();
+      document.getElementById('upload-preview').innerHTML = '';
+      uploadedImages = [];
+
+      // Reset checklist
+      document.querySelectorAll('.checklist-item').forEach(item => {
+        item.classList.remove('checked');
+        const checkbox = item.querySelector('.checklist-checkbox');
+        checkbox.style.background = 'transparent';
+        checkbox.style.borderColor = 'var(--gray-300)';
+        checkbox.querySelector('svg').style.color = 'transparent';
+      });
+
+      // Refresh listings and switch view
+      loadMyListings();
+      showSection('listings');
+    } else {
+      showToast(data.message || 'Submission failed', 'error');
+    }
+  })
+  .catch(err => {
+    console.error('Donation error:', err);
+    showToast('Network error. Please try again.', 'error');
+  });
 }
 
 // Filter listings
@@ -365,4 +402,58 @@ function showToast(message, type = 'info') {
   setTimeout(() => {
     toast.remove();
   }, 5000);
+}
+
+// Load donor's listings from backend
+function loadMyListings() {
+  const token = localStorage.getItem('foodrescuetoken');
+  fetch('/api/food/my/listings', {
+    headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+  })
+  .then(res => res.json())
+  .then(resp => {
+    if (!resp.success) {
+      console.warn('Failed to load listings', resp.message);
+      return;
+    }
+    const listings = resp.data || [];
+    const grid = document.getElementById('listings-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    listings.forEach(l => {
+      const card = document.createElement('div');
+      card.className = 'food-card';
+      card.setAttribute('data-status', (l.status || '').toLowerCase());
+      card.innerHTML = `
+        <div class="food-card-content" style="border-bottom: 1px solid var(--gray-100);">
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="food-card-title">${escapeHtml(l.title)} (${l.quantity})</h4>
+              <p class="text-sm text-gray-500">Listed ${new Date(l.createdAt).toLocaleString()}</p>
+            </div>
+            <div class="expiry-timer">${formatExpiry(l.expiryTime)}</div>
+          </div>
+          <div class="flex gap-2 mt-3">
+            <span class="badge badge-gray">${escapeHtml(l.status || '')}</span>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  })
+  .catch(err => console.error('Load listings error:', err));
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>"'`]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;', '`':'&#96;'}[s]));
+}
+
+function formatExpiry(iso) {
+  if (!iso) return '';
+  const diff = new Date(iso) - new Date();
+  if (diff <= 0) return 'Expired';
+  const hrs = Math.floor(diff / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  return `${hrs}h ${mins}m`;
 }

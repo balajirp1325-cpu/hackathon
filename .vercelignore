@@ -1,0 +1,9 @@
+dev.db
+.env.local
+node_modules
+.git
+.gitignore
+README.md
+docker-compose.yml
+Dockerfile
+./prisma/dev.db
