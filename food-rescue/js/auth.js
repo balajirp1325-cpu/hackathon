@@ -55,25 +55,44 @@ function handleLogin() {
     return;
   }
 
-  // Simulate login - determine role from email for demo
-  let role = 'donor';
-  if (email.includes('ngo')) role = 'ngo';
-  if (email.includes('volunteer')) role = 'volunteer';
+  // Show loading
+  const loginBtn = document.querySelector('#login-form button[type="submit"]');
+  const originalText = loginBtn.textContent;
+  loginBtn.textContent = 'Logging in...';
+  loginBtn.disabled = true;
 
-  // Store user data
-  localStorage.setItem('foodrescueuser', JSON.stringify({
-    email,
-    role,
-    name: 'Demo User',
-    loggedIn: true
-  }));
-
-  showToast('Login successful!', 'success');
-  
-  // Redirect based on role
-  setTimeout(() => {
-    redirectToDashboard(role);
-  }, 500);
+  fetch('/api/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, password }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Store user data and token
+      localStorage.setItem('foodrescueuser', JSON.stringify(data.data.user));
+      localStorage.setItem('foodrescuetoken', data.data.accessToken);
+      
+      showToast('Login successful!', 'success');
+      
+      // Redirect based on role
+      setTimeout(() => {
+        redirectToDashboard(data.data.user.role.toLowerCase());
+      }, 500);
+    } else {
+      showToast(data.message || 'Login failed', 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Login error:', error);
+    showToast('Network error. Please try again.', 'error');
+  })
+  .finally(() => {
+    loginBtn.textContent = originalText;
+    loginBtn.disabled = false;
+  });
 }
 
 function handleSignup() {
@@ -99,22 +118,57 @@ function handleSignup() {
     return;
   }
 
-  // Store user data
-  localStorage.setItem('foodrescueuser', JSON.stringify({
-    email,
-    role: selectedRole,
-    name,
-    phone,
-    organization: org,
-    loggedIn: true
-  }));
+  // Show loading
+  const signupBtn = document.querySelector('#signup-form button[type="submit"]');
+  const originalText = signupBtn.textContent;
+  signupBtn.textContent = 'Creating account...';
+  signupBtn.disabled = true;
 
-  showToast('Account created successfully!', 'success');
-  
-  // Redirect based on role
-  setTimeout(() => {
-    redirectToDashboard(selectedRole);
-  }, 500);
+  const roleMap = {
+    donor: 'DONOR',
+    ngo: 'NGO',
+    volunteer: 'VOLUNTEER'
+  };
+
+  fetch('/api/auth/signup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      password,
+      role: roleMap[selectedRole],
+      phone,
+      // Add other optional fields if needed
+    }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Store user data and token
+      localStorage.setItem('foodrescueuser', JSON.stringify(data.data.user));
+      localStorage.setItem('foodrescuetoken', data.data.accessToken);
+      
+      showToast('Account created successfully!', 'success');
+      
+      // Redirect based on role
+      setTimeout(() => {
+        redirectToDashboard(selectedRole);
+      }, 500);
+    } else {
+      showToast(data.message || 'Signup failed', 'error');
+    }
+  })
+  .catch(error => {
+    console.error('Signup error:', error);
+    showToast('Network error. Please try again.', 'error');
+  })
+  .finally(() => {
+    signupBtn.textContent = originalText;
+    signupBtn.disabled = false;
+  });
 }
 
 function redirectToDashboard(role) {

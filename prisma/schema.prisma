@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String
+  phone     String?
+  latitude  Float?
+  longitude Float?
+  address   String?
+  avgRating Float    @default(0)
+  ratingCount Int    @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens  RefreshToken[]
+  foodListings   FoodListing[]
+  requests       Request[]
+  deliveries     Delivery[]
+  notifications  Notification[]
+  ratingsGiven   Rating[]       @relation("RatingFrom")
+  ratingsReceived Rating[]      @relation("RatingTo")
+
+  @@index([role])
+  @@index([latitude, longitude])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model FoodListing {
+  id          String        @id @default(uuid())
+  donorId     String
+  donor       User          @relation(fields: [donorId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  quantity    Int
+  unit        String        @default("servings")
+  foodType    String        @default("VEG")
+  imageUrl    String?
+  imagePublicId String?
+  latitude    Float
+  longitude   Float
+  address     String?
+  expiryTime  DateTime
+  status      String @default("AVAILABLE")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  requests Request[]
+
+  @@index([status])
+  @@index([donorId])
+  @@index([expiryTime])
+  @@index([latitude, longitude])
+}
+
+model Request {
+  id            String        @id @default(uuid())
+  ngoId         String
+  ngo           User          @relation(fields: [ngoId], references: [id])
+  foodListingId String
+  foodListing   FoodListing   @relation(fields: [foodListingId], references: [id])
+  status        String @default("PENDING")
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  delivery Delivery?
+
+  @@unique([ngoId, foodListingId])
+  @@index([ngoId])
+  @@index([foodListingId])
+  @@index([status])
+}
+
+model Delivery {
+  id              String         @id @default(uuid())
+  volunteerId     String
+  volunteer       User           @relation(fields: [volunteerId], references: [id])
+  requestId       String         @unique
+  request         Request        @relation(fields: [requestId], references: [id])
+  status          String @default("ASSIGNED")
+  pickupTime      DateTime?
+  deliveryTime    DateTime?
+  currentLat      Float?
+  currentLng      Float?
+  routePolyline   String?
+  estimatedTime   Int?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  ratings Rating[]
+
+  @@index([volunteerId])
+  @@index([status])
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  message    String
+  type       String
+  data       String?
+  readStatus Boolean          @default(false)
+  createdAt  DateTime         @default(now())
+
+  @@index([userId])
+  @@index([readStatus])
+}
+
+model Rating {
+  id          String   @id @default(uuid())
+  fromUserId  String
+  fromUser    User     @relation("RatingFrom", fields: [fromUserId], references: [id])
+  toUserId    String
+  toUser      User     @relation("RatingTo", fields: [toUserId], references: [id])
+  deliveryId  String
+  delivery    Delivery @relation(fields: [deliveryId], references: [id])
+  rating      Int
+  review      String?
+  createdAt   DateTime @default(now())
+
+  @@unique([fromUserId, deliveryId])
+  @@index([toUserId])
+  @@index([deliveryId])
+}
+
+model CancelledOrder {
+  id             String   @id @default(uuid())
+  foodName       String
+  quantity       Int
+  unit           String   @default("servings")
+  restaurantName String
+  address        String
+  latitude       Float
+  longitude      Float
+  readyTime      DateTime
+  expiresAt      DateTime
+  isClaimed      Boolean  @default(false)
+  claimedById    String?
+  createdAt      DateTime @default(now())
+
+  @@index([isClaimed])
+  @@index([expiresAt])
+}
